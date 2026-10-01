@@ -1,37 +1,27 @@
 #pragma once
-#include <iostream>
 #include <vector>
 class IObserver
 {
 public:
-	virtual ~IObserver() = default;
-	virtual void update(float amount) = 0;
+    virtual ~IObserver() = default;
+    virtual void update(float amount) = 0;
 };
-class ConsoleLongger : public IObserver
+class ConsoleLogger : public IObserver
 {
 public:
-	void update(float amount) override {
-		std::cout << "New transaction: " << amount << "UAH" << std::endl;
-	}
+    void update(float amount) override;
 };
-class AnalyticView : public IObserver
+class AnalyticsView : public IObserver
 {
 public:
-	void update(float amount) override {
-		std::cout << "Transaction received: " << amount << "UAH" << std::endl;
-	}
+    void update(float amount) override;
 };
 class TransactionService
 {
 private:
-	std::vector<IObserver*> observers;
+    std::vector<IObserver*> observers;
 public:
-	void addObserver(IObserver* observer) {
-		observers.push_back(observer);
-	}
-	void notifyObservers(float amount) {
-		for (auto observer : observers) {
-			observer->update(amount);
-		}
-	}
+    void addObserver(IObserver* observer);
+
+    void notifyObservers(float amount);
 };

@@ -5,29 +5,62 @@
 #include "Model.h"
 #include "View.h"
 #include "Controller.h"
+#include <Windows.h>
 using namespace std;
-int main() { 
-	Model model;
-	View view; 
-	ConsoleLongger logger;
-	View analytics;
-	model.addObserver(&logger);
-	Controller controller(&model, &view);
-	StandartTaxStrategy standardTax;
-	ITSectorTaxStrategy itTax;
-	float amount;
-	cout << "Enter transaction amount: ";
-	cin >> amount;
 
-	cout << "\n===== STANDARD TAX =====" << endl;
-	controller.setStrategy(&standardTax);
-	view.showStrategy("Standard Tax 18%");
-	controller.processTransaction(amount);
-
-	cout << "\n===== STRATEGY CHANGED =====" << endl;
-	controller.setStrategy(&itTax);
-	view.showStrategy("IT Sector Tax 5%");
-	controller.processTransaction(amount);
-
-	return 0;
+int main()
+{
+	SetConsoleCP(CP_UTF8);
+	SetConsoleOutputCP(CP_UTF8);
+    Model model;
+    View view;
+    // Спостерігачі
+    ConsoleLogger logger;
+    AnalyticsView analytics;
+    model.addObserver(&logger);
+    model.addObserver(&analytics);
+    Controller controller(&model, &view);
+    // Стратегії
+    StandardTaxStrategy standardTax;
+    ITSectorTaxStrategy itTax;
+    float amount = 0;
+    int choice;
+    cout << "Введіть суму транзакції: ";
+    cin >> amount;
+    do
+    {
+        cout << "\nМЕНЮ" << endl;
+        cout << "1. Стандартний податок 18%" << endl;
+        cout << "2. Податок IT-сектору 5%" << endl;
+        cout << "3. Змінити суму транзакції" << endl;
+        cout << "0. Вийти" << endl;
+        cout << "Ваш вибір: ";
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            cout << "\nСтандартна стратегія " << endl;
+            controller.setStrategy(&standardTax, "Стандартний податок 18%");
+            controller.processTransaction(amount);
+            break;
+        case 2:
+            cout << "\nСтратегія IT-сектору " << endl;
+            controller.setStrategy(&itTax, "Податок IT-сектору 5%");
+            controller.processTransaction(amount);
+            break;
+        case 3:
+            cout << "Введіть нову суму транзакції: ";
+            cin >> amount;
+            cout << "Суму змінено на: "
+                << amount << " грн" << endl;
+            break;
+        case 0:
+            cout << "\nЗавершення програми..." << endl;
+            break;
+        default:
+            cout << "\nНеправильний вибір!" << endl;
+            break;
+        }
+    } while (choice != 0);
+    return 0;
 }

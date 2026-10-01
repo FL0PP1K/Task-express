@@ -2,20 +2,16 @@
 class ITaxCalculationStrategy
 {
 public:
-	virtual ~ITaxCalculationStrategy() = default;
-	virtual float calculateTax(float amount) = 0;
+    virtual ~ITaxCalculationStrategy() = default;
+    virtual float calculateTax(float amount) = 0;
 };
-class StandartTaxStrategy : public ITaxCalculationStrategy
+class StandardTaxStrategy : public ITaxCalculationStrategy
 {
 public:
-	float calculateTax(float amount) override {
-		return amount * 1.18;
-	};
+    float calculateTax(float amount) override;
 };
 class ITSectorTaxStrategy : public ITaxCalculationStrategy
 {
 public:
-	float calculateTax(float amount) override {
-		return amount * 1.05;
-	};
+    float calculateTax(float amount) override;
 };
