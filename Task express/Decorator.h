@@ -9,8 +9,7 @@ public:
 class BasicProcessor : public ITransactionProcessor
 {
 public:
-	float process(float amount) override {
-		return amount;
+	void processTransaction(float amount) override {
 	}
 };
 class TransactionDecorator : public ITransactionProcessor
@@ -26,20 +25,17 @@ class FeeDecorator : public TransactionDecorator
 {
 public:
 	FeeDecorator(ITransactionProcessor* processor) : TransactionDecorator(processor) {}
-	float process(float amount) override {
-		float result = processor->process(amount);
+	void processTransaction(float amount) override {
+		processor->processTransaction(amount);
 		std::cout << "FeeDecorator: Fee+20 UAH" << std::endl;
-		return result + 20;
 	}
 };
 class LoggingDecorator : public TransactionDecorator
 {
 public:
-	LoggingDecorator(ITransactionProcessor* processor) :TransactionDecorator(processor) {
-		float process(float amount) override {
-			float result = processor->process(amount);
-			std::cout << "LoggingDecorator: Transaction processed: " << result << "UAH" << std::endl;
-			return result;
+	LoggingDecorator(ITransactionProcessor* processor) :TransactionDecorator(processor) {}
+		void processTransaction(float amount) override {
+			processor->processTransaction(amount);
+			std::cout << "LoggingDecorator: Transaction processed: " <<	amount << "UAH" << std::endl;
 		}
-	};
 };
